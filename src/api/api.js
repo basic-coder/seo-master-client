@@ -7,7 +7,7 @@ export const UtilityResp = async (url,endpoint) => {
     console.log(url);
     await axios
       .post(
-        `http://localhost:4000/api/${endpoint}`,
+        `/api/${endpoint}`,
         {
           url,
         },
