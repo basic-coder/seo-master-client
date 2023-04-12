@@ -23,31 +23,26 @@ function App() {
         const link1 = await UtilityResp(url, "broken-link-report");
         setcsvData(link1.data.brokenLinksReport);
         setLoading(false);
-        setHeader(Object.keys(csvData[0]));
         break;
       case "canonicalTags":
         const link2 = await UtilityResp(url, "canonical-report");
         setcsvData(link2.data.canonicalTagReport);
         setLoading(false);
-        setHeader(Object.keys(csvData[0]));
         break;
       case "h1Tags":
         const link3 = await UtilityResp(url, "h1-report");
         setcsvData(link3.data.h1TagReport);
         setLoading(false);
-        setHeader(Object.keys(csvData[0]));
         break;
       case "canonical301":
         const link4 = await UtilityResp(url, "canonical301");
         setcsvData(link4.data.Canonical301);
         setLoading(false);
-        setHeader(Object.keys(csvData[0]));
         break;
       case "loadingTime":
         const link5 = await UtilityResp(url, "loading-time");
         setcsvData(link5.data.linkLoadingTime);
         setLoading(false);
-        setHeader(Object.keys(csvData[0]));
         break;
 
       default:
@@ -84,6 +79,11 @@ function App() {
     setcsvData([]);
   };
 
+  const setWindow = () =>{
+    setHeader(Object.keys(csvData[0]));
+    setOpWindow(!opWindow)
+  }
+
   return (
     <div className="App container">
       <form onSubmit={handleSubmit}>
@@ -97,10 +97,12 @@ function App() {
             placeholder="Enter your url"
           />
         </div>
-        <div className="input-box">
-          <label htmlFor="BrokenLinks">Output Window (WIP)</label>
-          <input type="checkbox" onChange={() => setOpWindow(!opWindow)} />
+        {csvData.length > 0 && (
+          <div className="input-box">
+          <label htmlFor="BrokenLinks">Output Window </label>
+          <input type="checkbox" onChange={setWindow} />
         </div>
+        )}    
         <div className="input-box">
           <label htmlFor="BrokenLinks">BrokenLinks</label>
           <input
