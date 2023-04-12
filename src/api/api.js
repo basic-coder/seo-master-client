@@ -7,7 +7,7 @@ export const UtilityResp = async (url,endpoint) => {
     console.log(url);
     await axios
       .post(
-        `/api/${endpoint}`,
+        `https://seo-master-server.onrender.com/api/${endpoint}`,
         {
           url,
         },
