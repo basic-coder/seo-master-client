@@ -123,10 +123,6 @@ thead {
         flex-direction: column;
     }
 
-    .container form{
-        margin-top: 5rem;
-    }
-
     .output{
         margin-top: 5rem;
         margin-bottom: 2rem;
