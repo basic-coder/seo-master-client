@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import { UtilityResp } from "./api/api";
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable'
 
 function App() {
   const [url, setUrl] = useState("");
@@ -79,10 +81,41 @@ function App() {
     setcsvData([]);
   };
 
-  const setWindow = () =>{
-    setHeader(Object.keys(csvData[0]));
-    setOpWindow(!opWindow)
+  function generatePDF(data) {
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "in",
+      format: [10, 10],
+    });
+    const tableColumn = Object.keys(data[0]);
+
+
+    let tableHeader = []
+
+    tableColumn.forEach(element => {
+      tableHeader.push({header: element, dataKey: element})
+    });
+
+    autoTable(doc,{
+      body: data,
+      columns: tableHeader,
+    });
+
+    const date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let hours = date.getHours();
+    let min = date.getMinutes();
+    let sec = date.getSeconds();
+    let filename = `${reports}(${day}-${month}-${year}-${hours}-${min}-${sec})`;
+    doc.save(`${filename}.pdf`);
   }
+
+  const setWindow = () => {
+    setHeader(Object.keys(csvData[0]));
+    setOpWindow(!opWindow);
+  };
 
   return (
     <div className="App container">
@@ -99,10 +132,10 @@ function App() {
         </div>
         {csvData.length > 0 && (
           <div className="input-box">
-          <label htmlFor="BrokenLinks">Output Window </label>
-          <input type="checkbox" onChange={setWindow} />
-        </div>
-        )}    
+            <label htmlFor="BrokenLinks">Output Window </label>
+            <input type="checkbox" onChange={setWindow} />
+          </div>
+        )}
         <div className="input-box">
           <label htmlFor="BrokenLinks">BrokenLinks</label>
           <input
@@ -154,9 +187,15 @@ function App() {
           />
         </div>
         <button type="submit">Submit</button>
-        {csvData.length > 0 && loading===false &&(
+        {csvData.length > 0 && loading === false && (
           <button type="button" onClick={() => exportToCsv(csvData)}>
-            Export Data
+            Export CSV
+          </button>
+        )}
+
+        {csvData.length > 0 && loading === false && (
+          <button type="button" onClick={() => generatePDF(csvData)}>
+            Export PDF
           </button>
         )}
 
